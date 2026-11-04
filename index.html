@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173f35">
+  <meta name="description" content="Reúsa ayuda a registrar, mantener, reparar, reutilizar y reciclar equipos electrónicos.">
+  <title>Reúsa | Gestión sostenible de equipos</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#inicio" aria-label="Reúsa, inicio">
+        <span class="brand-mark" aria-hidden="true">R</span>
+        <span><strong>Reúsa</strong><small>tecnología con más vida</small></span>
+      </a>
+      <nav aria-label="Navegación principal">
+        <a href="#panel">Resumen</a>
+        <a href="#equipos">Equipos</a>
+        <a href="#sobre">Sobre el proyecto</a>
+      </nav>
+      <button class="button button-primary button-small" id="addTopButton" type="button">＋ Registrar equipo</button>
+    </div>
+  </header>
+
+  <main id="contenido" class="page-shell">
+    <section class="hero" id="inicio" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">CIRCULARIDAD · MANTENIMIENTO · REUTILIZACIÓN</p>
+        <h1 id="hero-title">Dale una segunda vida<br><span>a tu tecnología.</span></h1>
+        <p class="hero-text">Lleva el control de tus equipos, registra sus mantenimientos y encuentra oportunidades para reparar, reutilizar o reciclar antes de reemplazar.</p>
+        <div class="hero-actions">
+          <button class="button button-light" id="heroAddButton" type="button">Registrar mi primer equipo <span aria-hidden="true">→</span></button>
+          <a class="text-link" href="#sobre">Conocer el proyecto</a>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="device device-laptop"><div class="laptop-screen"><span class="screen-leaf">↻</span><span class="screen-line"></span><span class="screen-line short"></span></div><div class="laptop-base"></div></div>
+        <div class="device device-phone"><div class="phone-camera"></div><span class="phone-leaf">✳</span></div>
+        <div class="art-spark spark-one">✦</div><div class="art-spark spark-two">✧</div>
+        <div class="art-caption">REPARAR · REUTILIZAR · RECICLAR</div>
+      </div>
+    </section>
+
+    <section class="impact-note" aria-label="Contexto ambiental">
+      <div class="impact-icon" aria-hidden="true">♻</div>
+      <p><strong>¿Por qué importa?</strong> El mundo generó 62 millones de toneladas de residuos electrónicos en 2022. Solo el 22.3 % quedó documentado como recolectado y reciclado formalmente. <a href="https://www.itu.int/en/ITU-D/Environment/Pages/Publications/The-Global-E-waste-Monitor-2024.aspx" target="_blank" rel="noopener noreferrer">Fuente: Global E-waste Monitor 2024</a>.</p>
+    </section>
+
+    <section class="section" id="panel" aria-labelledby="summary-title">
+      <div class="section-heading">
+        <div><p class="eyebrow">VISTA GENERAL</p><h2 id="summary-title">Tu impacto empieza con un registro</h2></div>
+        <span class="local-label"><span class="status-dot"></span> Datos guardados en este dispositivo</span>
+      </div>
+      <div class="stats-grid" aria-live="polite">
+        <article class="stat-card"><span class="stat-label">Equipos registrados</span><strong id="totalCount">0</strong><span class="stat-foot">Inventario total</span><span class="stat-symbol">▤</span></article>
+        <article class="stat-card"><span class="stat-label">En uso</span><strong id="inUseCount">0</strong><span class="stat-foot">Siguen funcionando</span><span class="stat-symbol">✓</span></article>
+        <article class="stat-card"><span class="stat-label">Para reparar o donar</span><strong id="repairDonateCount">0</strong><span class="stat-foot">Pueden tener otra oportunidad</span><span class="stat-symbol">↻</span></article>
+        <article class="stat-card"><span class="stat-label">Reciclados</span><strong id="recycledCount">0</strong><span class="stat-foot">Salida responsable registrada</span><span class="stat-symbol">♻</span></article>
+      </div>
+    </section>
+
+    <section class="section inventory-section" id="equipos" aria-labelledby="inventory-title">
+      <div class="section-heading inventory-heading">
+        <div><p class="eyebrow">INVENTARIO</p><h2 id="inventory-title">Mis equipos</h2><p class="section-subtitle">Registra su estado y conserva el historial de mantenimiento.</p></div>
+        <button class="button button-primary" id="addButton" type="button">＋ Nuevo equipo</button>
+      </div>
+      <div class="toolbar">
+        <label class="search-box"><span class="visually-hidden">Buscar equipo</span><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Buscar por nombre, tipo o marca..."></label>
+        <label class="filter-label" for="statusFilter">Estado</label>
+        <select id="statusFilter">
+          <option value="all">Todos</option><option value="in-use">En uso</option><option value="repair">Requiere reparación</option><option value="donate">Listo para donar</option><option value="recycled">Reciclado</option>
+        </select>
+        <div class="toolbar-spacer"></div>
+        <button class="button button-outline button-small" id="exportButton" type="button">↓ JSON</button>
+        <button class="button button-outline button-small" id="exportCsvButton" type="button">↓ CSV</button>
+        <button class="button button-outline button-small" id="importButton" type="button">↑ Importar</button>
+        <input class="visually-hidden" id="importFile" type="file" accept="application/json,.json">
+      </div>
+      <div id="equipmentList" class="equipment-grid" aria-live="polite" aria-busy="false"></div>
+      <div id="emptyState" class="empty-state">
+        <div class="empty-illustration" aria-hidden="true">▱</div>
+        <h3>Aún no tienes equipos registrados</h3>
+        <p>Comienza agregando una computadora, un celular u otro dispositivo. Podrás actualizar su estado cuando lo repares o decidas reutilizarlo.</p>
+        <button class="button button-primary" id="emptyAddButton" type="button">Registrar primer equipo</button>
+      </div>
+      <p id="listStatus" class="visually-hidden" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="section tips-section" aria-labelledby="tips-title">
+      <div class="section-heading"><div><p class="eyebrow">PEQUEÑAS ACCIONES</p><h2 id="tips-title">Antes de reemplazar, considera...</h2></div></div>
+      <div class="tips-grid">
+        <article class="tip-card"><span class="tip-number">01</span><h3>Revisar</h3><p>Identifica si la falla es de batería, almacenamiento, pantalla o software antes de dar el equipo por perdido.</p></article>
+        <article class="tip-card"><span class="tip-number">02</span><h3>Reparar o reutilizar</h3><p>Una reparación o un uso distinto puede extender la vida útil del dispositivo.</p></article>
+        <article class="tip-card"><span class="tip-number">03</span><h3>Entregar correctamente</h3><p>Si ya no puede aprovecharse, busca un centro autorizado para el manejo de residuos electrónicos.</p></article>
+      </div>
+    </section>
+
+    <section class="about-panel" id="sobre" aria-labelledby="about-title">
+      <div><p class="eyebrow">SOBRE REÚSA</p><h2 id="about-title">Menos reemplazos impulsivos.<br>Más decisiones responsables.</h2></div>
+      <div><p>Reúsa es un prototipo académico que promueve la economía circular mediante el registro de equipos y sus acciones de mantenimiento. La aplicación no calcula emisiones evitadas ni certifica reciclaje: organiza información para ayudar a tomar mejores decisiones.</p><p class="about-note">Privacidad por diseño: los datos se guardan localmente en tu navegador. No se crea una cuenta ni se envía información a un servidor.</p></div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="footer-inner"><span class="footer-brand">Reúsa <span>·</span> Proyecto académico de software sostenible</span><span>Ligero, local y sin dependencias externas.</span></div></footer>
+
+  <dialog class="modal" id="equipmentDialog" aria-labelledby="dialogTitle">
+    <form id="equipmentForm" method="dialog" novalidate>
+      <div class="modal-heading"><div><p class="eyebrow">INVENTARIO</p><h2 id="dialogTitle">Registrar equipo</h2></div><button type="button" class="icon-button" data-close="equipmentDialog" aria-label="Cerrar">×</button></div>
+      <input type="hidden" id="equipmentId">
+      <div class="form-grid">
+        <label class="field field-full">Nombre del equipo <span class="required">*</span><input id="equipmentName" name="name" maxlength="70" required placeholder="Ej. Laptop de oficina"><span class="field-error" id="nameError"></span></label>
+        <label class="field">Tipo <span class="required">*</span><select id="equipmentType" name="type" required><option value="">Selecciona una opción</option><option>Computadora</option><option>Celular</option><option>Tablet</option><option>Monitor</option><option>Impresora</option><option>Periférico</option><option>Otro</option></select></label>
+        <label class="field">Marca o modelo<input id="equipmentBrand" name="brand" maxlength="70" placeholder="Ej. Lenovo ThinkPad"></label>
+        <label class="field">Fecha aproximada de adquisición<input id="equipmentDate" name="acquired" type="date"></label>
+        <label class="field">Estado actual <span class="required">*</span><select id="equipmentStatus" name="status" required><option value="in-use">En uso</option><option value="repair">Requiere reparación</option><option value="donate">Listo para donar</option><option value="recycled">Reciclado</option></select></label>
+        <label class="field field-full">Notas<textarea id="equipmentNotes" name="notes" rows="3" maxlength="500" placeholder="Condición, falla detectada o información útil..."></textarea></label>
+      </div>
+      <p class="form-help">Evita registrar datos personales, números de serie o información confidencial.</p>
+      <div class="modal-actions"><button class="button button-outline" type="button" data-close="equipmentDialog">Cancelar</button><button class="button button-primary" type="submit" id="saveEquipmentButton">Guardar equipo</button></div>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="maintenanceDialog" aria-labelledby="maintenanceTitle">
+    <form id="maintenanceForm" method="dialog" novalidate>
+      <div class="modal-heading"><div><p class="eyebrow">HISTORIAL</p><h2 id="maintenanceTitle">Registrar mantenimiento</h2><p class="section-subtitle" id="maintenanceEquipmentName"></p></div><button type="button" class="icon-button" data-close="maintenanceDialog" aria-label="Cerrar">×</button></div>
+      <input type="hidden" id="maintenanceEquipmentId">
+      <label class="field">Fecha <span class="required">*</span><input id="maintenanceDate" type="date" required></label>
+      <label class="field">Tipo de actividad <span class="required">*</span><select id="maintenanceType" required><option value="">Selecciona una opción</option><option>Revisión preventiva</option><option>Reparación</option><option>Limpieza</option><option>Actualización de software</option><option>Cambio de componente</option><option>Otro</option></select></label>
+      <label class="field">Descripción <span class="required">*</span><textarea id="maintenanceDescription" rows="3" maxlength="300" required placeholder="Describe brevemente qué se realizó..."></textarea></label>
+      <div class="modal-actions"><button class="button button-outline" type="button" data-close="maintenanceDialog">Cancelar</button><button class="button button-primary" type="submit">Guardar actividad</button></div>
+    </form>
+  </dialog>
+
+  <dialog class="modal modal-detail" id="detailDialog" aria-labelledby="detailTitle">
+    <div class="modal-heading"><div><p class="eyebrow">DETALLE DEL EQUIPO</p><h2 id="detailTitle">Equipo</h2></div><button type="button" class="icon-button" data-close="detailDialog" aria-label="Cerrar">×</button></div>
+    <div id="detailContent"></div>
+    <div class="modal-actions"><button class="button button-outline" type="button" data-close="detailDialog">Cerrar</button></div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
